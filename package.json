@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-media-usage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Track where media files are used across content types in Strapi",
   "keywords": [
     "strapi",
@@ -10,6 +10,10 @@
     "assets"
   ],
   "license": "MIT",
+  "files": [
+    "dist",
+    "strapi.json"
+  ],
   "exports": {
     "./strapi-admin": {
       "types": "./dist/admin/src/index.d.ts",
