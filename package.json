@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "description": "Track where media files are used across content types in Strapi",
   "keywords": [
-    "strapi",
+    "strapi-plugin",
+    "strapi-v5",
     "plugin",
     "media",
     "upload",
