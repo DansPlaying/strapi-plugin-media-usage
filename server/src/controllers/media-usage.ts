@@ -6,10 +6,15 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
     if (Number.isNaN(fileId)) {
       return ctx.badRequest('Invalid file ID');
     }
-    const data = await strapi
-      .plugin('media-usage')
-      .service('mediaUsage')
-      .getFileUsages(fileId);
+    let data: any[] = [];
+    try {
+      data = await strapi
+        .plugin('media-usage')
+        .service('mediaUsage')
+        .getFileUsages(fileId);
+    } catch {
+      // swallow errors — return empty list
+    }
     ctx.body = { data };
   },
 });

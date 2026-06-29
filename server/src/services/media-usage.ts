@@ -19,7 +19,7 @@ interface UsageResult {
   entryTitle: string;
   fieldName: string;
   isComponent: boolean;
-  viaComponent?: string;
+  viaComponent?: string; // component display name if traced through a component
 }
 
 async function traceToContentEntries(
