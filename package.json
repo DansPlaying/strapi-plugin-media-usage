@@ -48,7 +48,7 @@
   "devDependencies": {
     "@strapi/design-system": "2.2.0",
     "@strapi/icons": "2.2.0",
-    "@strapi/sdk-plugin": "^6.0.0",
+    "@strapi/sdk-plugin": "6.1.0",
     "@strapi/strapi": "5.44.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
