@@ -62,6 +62,31 @@ const S: Record<string, React.CSSProperties> = {
     textTransform: 'uppercase',
     color: 'var(--strapi-neutral-600, #666687)',
   },
+  headingRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  headingInline: {
+    margin: 0,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: 'var(--strapi-neutral-600, #666687)',
+  },
+  loadBtn: {
+    fontSize: 11,
+    fontWeight: 600,
+    color: 'var(--strapi-primary-600, #4945ff)',
+    background: 'none',
+    border: '1px solid var(--strapi-primary-200, #d9d8ff)',
+    borderRadius: 3,
+    padding: '2px 8px',
+    cursor: 'pointer',
+    lineHeight: '1.6',
+  },
   meta: {
     margin: 0,
     fontSize: 12,
@@ -184,34 +209,39 @@ export function FileUsageSectionStandalone({ fileId }: { fileId: number }) {
     usages: UsageEntry[] | null;
     loading: boolean;
     error: string | null;
-  }>({ usages: null, loading: true, error: null });
+  }>({ usages: null, loading: false, error: null });
 
+  // Reset when the file changes so stale results don't show
   useEffect(() => {
-    let cancelled = false;
+    setState({ usages: null, loading: false, error: null });
+  }, [fileId]);
+
+  function load() {
     setState({ usages: null, loading: true, error: null });
     fetchFileUsages(fileId)
-      .then((usages) => {
-        if (!cancelled) setState({ usages, loading: false, error: null });
-      })
-      .catch((err) => {
-        if (!cancelled) setState({ usages: null, loading: false, error: err.message });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [fileId]);
+      .then((usages) => setState({ usages, loading: false, error: null }))
+      .catch((err) => setState({ usages: null, loading: false, error: err.message }));
+  }
 
   const { usages, loading, error } = state;
   const deduped = usages ? dedupeUsages(usages) : [];
+  const loaded = usages !== null || error !== null;
 
   return (
     <div style={S.section}>
-      <p style={S.heading}>Used in</p>
+      <div style={S.headingRow}>
+        <p style={S.headingInline}>Used in</p>
+        {!loading && (
+          <button style={S.loadBtn} onClick={load}>
+            {loaded ? 'Refresh' : 'Check usage'}
+          </button>
+        )}
+      </div>
       {loading ? (
         <p style={S.meta}>Loading…</p>
       ) : error ? (
         <p style={S.meta}>Unable to load usage data.</p>
-      ) : !deduped.length ? (
+      ) : !loaded ? null : !deduped.length ? (
         <p style={S.meta}>Not referenced in any content entry.</p>
       ) : (
         <div>
