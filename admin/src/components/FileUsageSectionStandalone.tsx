@@ -1,5 +1,31 @@
 import { useEffect, useState } from 'react';
 
+// Accessible colours for the "Used in" section.
+// Heading and secondary text use CSS classes so they can adapt to Strapi's dark
+// theme ([data-theme="dark"] on <html>) and the OS media query.
+//   Light-mode heading  #5c5c7a → 6.4:1 on white  ✓ WCAG AA
+//   Dark-mode  heading  #b0b0c5 → 7.4:1 on #212134 ✓ WCAG AA
+//   Dark-mode secondary #a0a0bb → 6.2:1 on #212134 ✓ WCAG AA
+const ACCESSIBLE_CSS = `
+  .mup-label-text   { color: #5c5c7a; }
+  .mup-entry-secondary { color: #5c5c7a; }
+  @media (prefers-color-scheme: dark) {
+    .mup-label-text      { color: #b0b0c5; }
+    .mup-entry-secondary { color: #a0a0bb; }
+  }
+  [data-theme="dark"] .mup-label-text      { color: #b0b0c5; }
+  [data-theme="dark"] .mup-entry-secondary { color: #a0a0bb; }
+`;
+
+let _styleInjected = false;
+function ensureStyles() {
+  if (_styleInjected || typeof document === 'undefined') return;
+  const el = document.createElement('style');
+  el.textContent = ACCESSIBLE_CSS;
+  document.head.appendChild(el);
+  _styleInjected = true;
+}
+
 interface UsageEntry {
   contentTypeUid: string;
   contentTypeDisplayName: string;
@@ -60,7 +86,7 @@ const S: Record<string, React.CSSProperties> = {
     fontWeight: 700,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
-    color: 'var(--strapi-neutral-600, #666687)',
+    // colour handled by .mup-label-text class
   },
   headingRow: {
     display: 'flex',
@@ -74,14 +100,17 @@ const S: Record<string, React.CSSProperties> = {
     fontWeight: 700,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
-    color: 'var(--strapi-neutral-600, #666687)',
+    // colour handled by .mup-label-text class
   },
   loadBtn: {
     fontSize: 11,
     fontWeight: 600,
-    color: 'var(--strapi-neutral-0, #ffffff)',
-    background: 'var(--strapi-primary-600, #4945ff)',
-    border: '1px solid var(--strapi-primary-700, #3b38d4)',
+    // Hardcoded white + primary-700 (#3b38d4): 7.8:1 contrast in any theme.
+    // Avoid var(--strapi-neutral-0) which resolves to a dark colour in Strapi's
+    // dark mode, collapsing text/background contrast to ~2.7:1.
+    color: '#ffffff',
+    background: '#3b38d4',
+    border: '1px solid #2c29a8',
     borderRadius: 3,
     padding: '2px 8px',
     cursor: 'pointer',
@@ -117,7 +146,7 @@ const S: Record<string, React.CSSProperties> = {
   entryTitle: {
     display: 'block',
     fontSize: 11,
-    color: 'var(--strapi-neutral-600, #666687)',
+    // colour handled by .mup-entry-secondary class
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -182,7 +211,7 @@ function EntryRow({
           </span>
         </div>
         {!entry.isComponent && (
-          <span style={S.entryTitle} title={entry.entryTitle}>
+          <span style={S.entryTitle} className="mup-entry-secondary" title={entry.entryTitle}>
             {entry.entryTitle}
           </span>
         )}
@@ -211,6 +240,8 @@ export function FileUsageSectionStandalone({ fileId }: { fileId: number }) {
     error: string | null;
   }>({ usages: null, loading: false, error: null });
 
+  useEffect(() => { ensureStyles(); }, []);
+
   // Reset when the file changes so stale results don't show
   useEffect(() => {
     setState({ usages: null, loading: false, error: null });
@@ -230,7 +261,7 @@ export function FileUsageSectionStandalone({ fileId }: { fileId: number }) {
   return (
     <div style={S.section}>
       <div style={S.headingRow}>
-        <p style={S.headingInline}>Used in</p>
+        <p style={S.headingInline} className="mup-label-text">Used in</p>
         {!loading && (
           <button style={S.loadBtn} onClick={load}>
             {loaded ? 'Refresh' : 'Check usage'}

@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-media-usage",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Track where media files are used across content types in Strapi",
   "keywords": [
     "strapi-plugin",
