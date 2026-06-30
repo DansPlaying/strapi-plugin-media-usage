@@ -35,13 +35,13 @@ Open any asset in the **Media Library** by clicking it. At the bottom-left of th
 
 Click **Check usage** to load the list of content entries that reference this file.
 
-![Check usage button](docs/screenshot-check-usage.png)
+![Check usage button](https://raw.githubusercontent.com/DansPlaying/strapi-plugin-media-usage/main/docs/screenshot-check-usage.png)
 
 ### 2. View results and navigate
 
 Each entry shows the content type, the entry title, and which component holds the image. Click **Open →** to jump directly to that entry in the Content Manager.
 
-![Usage results](docs/screenshot-usage-results.png)
+![Usage results](https://raw.githubusercontent.com/DansPlaying/strapi-plugin-media-usage/main/docs/screenshot-usage-results.png)
 
 Click **Refresh** at any time to re-fetch the list (useful after editing content).
 
