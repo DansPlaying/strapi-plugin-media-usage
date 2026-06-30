@@ -79,9 +79,9 @@ const S: Record<string, React.CSSProperties> = {
   loadBtn: {
     fontSize: 11,
     fontWeight: 600,
-    color: 'var(--strapi-primary-600, #4945ff)',
-    background: 'none',
-    border: '1px solid var(--strapi-primary-200, #d9d8ff)',
+    color: 'var(--strapi-neutral-0, #ffffff)',
+    background: 'var(--strapi-primary-600, #4945ff)',
+    border: '1px solid var(--strapi-primary-700, #3b38d4)',
     borderRadius: 3,
     padding: '2px 8px',
     cursor: 'pointer',
